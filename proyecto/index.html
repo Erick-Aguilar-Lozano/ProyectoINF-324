@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>three.js webgl - orbit controls</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<link type="text/css" rel="stylesheet" href="main.css">
+		<style>
+			body {
+				background-color: #ccc;
+				color: #000;
+			}
+
+			a {
+				color: #f00;
+			}
+		</style>
+	</head>
+
+	<body>
+		<!--<div id="info">
+			<a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> - orbit controls
+		</div>-->
+		<div id="info">
+			<p>Proyecto INF-324 PRADO <br> PACEÑO EN LOS 80</a>  - Aguilar Lozano Erick<br> Miguel Angel Pozo Morales <br> -</p>
+		</div>
+		<script type="module">
+
+			import * as THREE from '../build/three.module.js';
+			import { OrbitControls } from './jsm/controls/OrbitControls.js';
+			import { ThreeMFLoader } from './jsm/loaders/3MFLoader.js';
+
+			var camera, controls, scene, renderer;
+
+			init();
+			//render(); // remove when using next line for animation loop (requestAnimationFrame)
+			animate();
+
+			function init() {
+
+				scene = new THREE.Scene();
+				//scene.background = new THREE.Color( 0xcccccc );
+				scene.background = new THREE.Color( 6135253 );
+				scene.fog = new THREE.FogExp2( 0xcccccc, 0.002 );
+				//scene.fog = new THREE.FogExp2( 0xcccccc, 1,100 );
+
+				renderer = new THREE.WebGLRenderer( { antialias: true } );
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				document.body.appendChild( renderer.domElement );
+
+				camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 1000 );
+				camera.position.set( 800, 200, 0 );
+
+				// controls
+
+				controls = new OrbitControls( camera, renderer.domElement );
+
+				//controls.addEventListener( 'change', render ); // call this only in static scenes (i.e., if there is no animation loop)
+
+				controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
+				controls.dampingFactor = 0.05;
+
+				controls.screenSpacePanning = false;
+
+				controls.minDistance = 100;
+				controls.maxDistance = 500;
+
+				controls.maxPolarAngle = Math.PI / 2;
+
+				// world
+				//erick
+				// adicion autos 1 ,torre fuente nubes
+				var manager = new THREE.LoadingManager();
+				var loader = new ThreeMFLoader( manager );
+				loader.load( './models/3mf/auto4.3mf', function ( object ) {
+					object.quaternion.setFromEuler( new THREE.Euler( - Math.PI / 2,  0 , 0 ) );
+					object.position.x = 0;
+					object.position.z = 80;
+					object.traverse( function ( child ) {
+						child.castShadow = true;
+					} );
+					scene.add( object );
+				} );
+
+				var manager2 = new THREE.LoadingManager();
+				var loader2 = new ThreeMFLoader( manager2 );
+				loader2.load( './models/3mf/auto3.3mf', function ( object2 ) {
+					object2.quaternion.setFromEuler( new THREE.Euler( - Math.PI / 2,  0 , 0 ) );
+					object2.position.x = 30;
+					object2.position.z = -30;
+					object2.traverse( function ( child2 ) {
+						child2.castShadow = true;
+					} );
+					scene.add( object2 );
+				} );
+
+				var manager3 = new THREE.LoadingManager();
+				var loader3 = new ThreeMFLoader( manager3 );
+				loader3.load( './models/3mf/torre2.3mf', function ( object3 ) {
+					object3.quaternion.setFromEuler( new THREE.Euler( - Math.PI / 2,  0 , 0 ) );
+					object3.position.x = 280;
+					object3.position.y = 5;
+					object3.position.z = -1;
+					object3.traverse( function ( child3 ) {
+						child3.castShadow = true;
+					} );
+					scene.add( object3 );
+				} );
+
+				var manager4 = new THREE.LoadingManager();
+				var loader4 = new ThreeMFLoader( manager4 );
+				loader4.load( './models/3mf/fuente.3mf', function ( object4 ) {
+					object4.quaternion.setFromEuler( new THREE.Euler( - Math.PI / 2,  0 , 0 ) );
+					object4.position.x = 110;
+					object4.position.y = 5;
+					object4.position.z = 9;
+					object4.traverse( function ( child4 ) {
+						child4.castShadow = true;
+					} );
+					scene.add( object4 );
+				} );
+
+				var manager5 = new THREE.LoadingManager();
+				var loader5 = new ThreeMFLoader( manager5 );
+				loader5.load( './models/3mf/nube3.3mf', function ( object5 ) {
+					object5.quaternion.setFromEuler( new THREE.Euler( - Math.PI / 2,  0 , 0 ) );
+					object5.position.x = 0;
+					object5.position.y = 150;
+					object5.position.z = 50;
+					object5.traverse( function ( child5 ) {
+						child5.castShadow = true;
+					} );
+					scene.add( object5 );
+				} );
+
+				var manager6 = new THREE.LoadingManager();
+				var loader6 = new ThreeMFLoader( manager6 );
+				loader6.load( './models/3mf/truck.3mf', function ( object6 ) {
+					object6.quaternion.setFromEuler( new THREE.Euler( - Math.PI / 2,  0 , 0 ) );
+					object6.position.x = 350;
+					object6.position.y = 0;
+					object6.position.z = -100;
+					object6.traverse( function ( child6 ) {
+						child6.castShadow = true;
+					} );
+					scene.add( object6 );
+				} );
+
+				var manager7 = new THREE.LoadingManager();
+				var loader7 = new ThreeMFLoader( manager7 );
+				loader7.load( './models/3mf/arbol.3mf', function ( object7 ) {
+					object7.quaternion.setFromEuler( new THREE.Euler( - Math.PI / 2,  0 , 0 ) );
+					object7.position.x = 10;
+					object7.position.y = 0;
+					object7.position.z = 40;
+					object7.traverse( function ( child7 ) {
+						child7.castShadow = true;
+					} );
+					scene.add( object7 );
+				} );
+
+				var manager8 = new THREE.LoadingManager();
+				var loader8 = new ThreeMFLoader( manager8 );
+				loader8.load( './models/3mf/arbol.3mf', function ( object8 ) {
+					object8.quaternion.setFromEuler( new THREE.Euler( - Math.PI / 2,  0 , 0 ) );
+					object8.position.x = 10;
+					object8.position.y = 0;
+					object8.position.z = -20;
+					object8.traverse( function ( child8 ) {
+						child8.castShadow = true;
+					} );
+					scene.add( object8 );
+				} );
+
+				var manager9 = new THREE.LoadingManager();
+				var loader9 = new ThreeMFLoader( manager9 );
+				loader9.load( './models/3mf/arbol.3mf', function ( object9 ) {
+					object9.quaternion.setFromEuler( new THREE.Euler( - Math.PI / 2,  0 , 0 ) );
+					object9.position.x = -60;
+					object9.position.y = 0;
+					object9.position.z = 40;
+					object9.traverse( function ( child9 ) {
+						child9.castShadow = true;
+					} );
+					scene.add( object9 );
+				} );
+
+				var manager10 = new THREE.LoadingManager();
+				var loader10 = new ThreeMFLoader( manager10 );
+				loader10.load( './models/3mf/arbol.3mf', function ( object10 ) {
+					object10.quaternion.setFromEuler( new THREE.Euler( - Math.PI / 2,  0 , 0 ) );
+					object10.position.x = -60;
+					object10.position.y = 0;
+					object10.position.z = -20;
+					object10.traverse( function ( child10 ) {
+						child10.castShadow = true;
+					} );
+					scene.add( object10 );
+				} );
+
+				var manager11 = new THREE.LoadingManager();
+				var loader11 = new ThreeMFLoader( manager11 );
+				loader11.load( './models/3mf/arbol.3mf', function ( object11 ) {
+					object11.quaternion.setFromEuler( new THREE.Euler( - Math.PI / 2,  0 , 0 ) );
+					object11.position.x = -130;
+					object11.position.y = 0;
+					object11.position.z = 40;
+					object11.traverse( function ( child11 ) {
+						child11.castShadow = true;
+					} );
+					scene.add( object11 );
+				} );
+
+				var manager12 = new THREE.LoadingManager();
+				var loader12 = new ThreeMFLoader( manager12 );
+				loader12.load( './models/3mf/arbol.3mf', function ( object12 ) {
+					object12.quaternion.setFromEuler( new THREE.Euler( - Math.PI / 2,  0 , 0 ) );
+					object12.position.x = -130;
+					object12.position.y = 0;
+					object12.position.z = -20;
+					object12.traverse( function ( child12 ) {
+						child12.castShadow = true;
+					} );
+					scene.add( object12 );
+				} );
+
+				var manager13 = new THREE.LoadingManager();
+				var loader13 = new ThreeMFLoader( manager13 );
+				loader13.load( './models/3mf/auto4.3mf', function ( object13 ) {
+					object13.quaternion.setFromEuler( new THREE.Euler( - Math.PI / 2,  0 , 0 ) );
+					object13.position.x = 300;
+					object13.position.y = 0;
+					object13.position.z = 140;
+					object13.traverse( function ( child13 ) {
+						child13.castShadow = true;
+					} );
+					scene.add( object13 );
+				} );
+				//fin adicion autos 1 y torre
+				//erick ini
+				var imagen = new THREE.PlaneBufferGeometry( 330, 230 );
+				var materialimagen = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } );
+				materialimagen.map   = THREE.ImageUtils.loadTexture('./imagenes/pradoLaPaz.jpg');
+				//materialplano.bumpMap   = THREE.ImageUtils.loadTexture('campo.jpg');
+				//materialplano.bumpScale = 0.05;
+				var objetoimagen = new THREE.Mesh( imagen, materialimagen );
+				objetoimagen.rotation.x = -Math.PI / 2;
+				objetoimagen.rotation.y = Math.PI / 2;
+				objetoimagen.rotation.z = Math.PI / 2;
+				objetoimagen.position.x = 250;
+				objetoimagen.position.y = 120;
+				objetoimagen.position.z = -180;
+				objetoimagen.scale.set( 0.5, 0.5, 0.5 );
+				scene.add( objetoimagen );
+				//erick fin
+				//inicio calles
+				var calle = new THREE.PlaneBufferGeometry( 600, 80 );
+				var materialcalle = new THREE.MeshPhongMaterial();
+				materialcalle.map   = THREE.ImageUtils.loadTexture('./imagenes/calle.jpg');
+				var objetocalle = new THREE.Mesh( calle, materialcalle );
+				objetocalle.rotation.x = - Math.PI / 2;objetocalle.position.y = 0;objetocalle.position.z = 60;
+				objetocalle.scale.set( 0.5, 0.5, 0.5 );scene.add( objetocalle );
+
+				var calle1 = new THREE.PlaneBufferGeometry( 600, 80 );
+				var materialcalle1 = new THREE.MeshPhongMaterial();
+				materialcalle1.map   = THREE.ImageUtils.loadTexture('./imagenes/calle.jpg');
+				var objetocalle1 = new THREE.Mesh( calle1, materialcalle1 );
+				objetocalle1.rotation.x = - Math.PI / 2;
+				objetocalle1.position.y = 0;
+				objetocalle1.position.z = -60;
+				objetocalle1.scale.set( 0.5, 0.5, 0.5 );
+				scene.add( objetocalle1 );
+
+				var calle2 = new THREE.PlaneBufferGeometry( 150, 800 );
+				var materialcalle2 = new THREE.MeshPhongMaterial();
+				materialcalle2.map   = THREE.ImageUtils.loadTexture('./imagenes/calleh.jpg');
+				var objetocalle2 = new THREE.Mesh( calle2, materialcalle2 );
+				objetocalle2.rotation.x = - Math.PI / 2;
+				objetocalle2.position.x = 187;
+				objetocalle2.position.y = 0;
+				objetocalle2.position.z = 0;
+				objetocalle2.scale.set( 0.5, 0.5, 0.5 );
+				scene.add( objetocalle2 );
+
+				var calle3 = new THREE.PlaneBufferGeometry( 600, 80 );
+				var materialcalle3 = new THREE.MeshPhongMaterial();
+				materialcalle3.map   = THREE.ImageUtils.loadTexture('./imagenes/calle.jpg');
+				var objetocalle3 = new THREE.Mesh( calle3, materialcalle3 );
+				objetocalle3.rotation.x = - Math.PI / 2;objetocalle3.position.y = 0;objetocalle3.position.z = 140;
+				objetocalle3.scale.set( 0.5, 0.5, 0.5 );scene.add( objetocalle3 );
+
+				var calle4 = new THREE.PlaneBufferGeometry( 600, 80 );
+				var materialcalle4 = new THREE.MeshPhongMaterial();
+				materialcalle4.map   = THREE.ImageUtils.loadTexture('./imagenes/calle.jpg');
+				var objetocalle4 = new THREE.Mesh( calle4, materialcalle4 );
+				objetocalle4.rotation.x = - Math.PI / 2;objetocalle4.position.y = 0;objetocalle4.position.z = -140;
+				objetocalle4.scale.set( 0.5, 0.5, 0.5 );scene.add( objetocalle4 );
+
+				var calle5 = new THREE.PlaneBufferGeometry( 80, 80 );
+				var materialcalle5 = new THREE.MeshPhongMaterial();
+				materialcalle5.map   = THREE.ImageUtils.loadTexture('./imagenes/calleh.jpg');
+				var objetocalle5 = new THREE.Mesh( calle5, materialcalle5 );
+				objetocalle5.rotation.x = - Math.PI / 2;objetocalle5.position.x = -70;objetocalle5.position.y = 0;objetocalle5.position.z = 100;
+				objetocalle5.scale.set( 0.5, 0.5, 0.5 );scene.add( objetocalle5 );
+
+				var calle6 = new THREE.PlaneBufferGeometry( 80, 80 );
+				var materialcalle6 = new THREE.MeshPhongMaterial();
+				materialcalle6.map   = THREE.ImageUtils.loadTexture('./imagenes/calleh.jpg');
+				var objetocalle6 = new THREE.Mesh( calle6, materialcalle6 );
+				objetocalle6.rotation.x = - Math.PI / 2;objetocalle6.position.x = -70;objetocalle6.position.y = 0;objetocalle6.position.z = -100;
+				objetocalle6.scale.set( 0.5, 0.5, 0.5 );scene.add( objetocalle6 );
+
+				var calle7 = new THREE.PlaneBufferGeometry( 80, 600 );
+				var materialcalle7 = new THREE.MeshPhongMaterial();
+				materialcalle7.map   = THREE.ImageUtils.loadTexture('./imagenes/calleh.jpg');
+				var objetocalle7 = new THREE.Mesh( calle7, materialcalle7 );
+				objetocalle7.rotation.x = - Math.PI / 2;
+				objetocalle7.position.x = 350;
+				objetocalle7.position.y = 0;
+				objetocalle7.position.z = 0;
+				objetocalle7.scale.set( 0.5, 0.5, 0.5 );
+				scene.add( objetocalle7 );
+
+				var calle8 = new THREE.PlaneBufferGeometry( 210, 80 );
+				var materialcalle8 = new THREE.MeshPhongMaterial();
+				materialcalle8.map   = THREE.ImageUtils.loadTexture('./imagenes/calle.jpg');
+				var objetocalle8 = new THREE.Mesh( calle8, materialcalle8 );
+				objetocalle8.rotation.x = - Math.PI / 2;objetocalle8.position.x = 277.5;objetocalle8.position.y = 0;objetocalle8.position.z = 120;
+				objetocalle8.scale.set( 0.5, 0.5, 0.5 );scene.add( objetocalle8 );
+
+				var calle9 = new THREE.PlaneBufferGeometry( 210, 80 );
+				var materialcalle9 = new THREE.MeshPhongMaterial();
+				materialcalle9.map   = THREE.ImageUtils.loadTexture('./imagenes/calle.jpg');
+				var objetocalle9 = new THREE.Mesh( calle9, materialcalle9 );
+				objetocalle9.rotation.x = - Math.PI / 2;objetocalle9.position.x = 277.5;objetocalle9.position.y = 0;objetocalle9.position.z = -120;
+				objetocalle9.scale.set( 0.5, 0.5, 0.5 );scene.add( objetocalle9 );
+
+				var calle10 = new THREE.PlaneBufferGeometry( 100, 250 );
+				var materialcalle10 = new THREE.MeshPhongMaterial();
+				materialcalle10.map   = THREE.ImageUtils.loadTexture('./imagenes/calle.jpg');
+				var objetocalle10 = new THREE.Mesh( calle10, materialcalle10 );
+				objetocalle10.rotation.x = - Math.PI / 2;objetocalle10.position.x = 395;objetocalle10.position.y = 0;objetocalle10.position.z = 0;
+				objetocalle10.scale.set( 0.5, 0.5, 0.5 );scene.add( objetocalle10 );
+				//fin calles
+
+				// inicio paseo
+				var paseo = new THREE.BoxBufferGeometry( 15, 0.1, 4 );
+				var materialpaseo = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } );
+				materialpaseo.map   = THREE.ImageUtils.loadTexture('./imagenes/paseo.jpg');
+				materialpaseo.bumpMap   = THREE.ImageUtils.loadTexture('./imagenes/paseo.jpg');
+				materialpaseo.bumpScale = 5;
+				var meshpaseo = new THREE.Mesh( paseo, materialpaseo );
+				meshpaseo.position.x = 0;
+				meshpaseo.position.y = 0;
+				meshpaseo.position.z = 0;
+				meshpaseo.scale.x = 20;
+				meshpaseo.scale.y = Math.random() * 80 + 10;
+				meshpaseo.scale.z = 20;
+				meshpaseo.updateMatrix();
+				meshpaseo.matrixAutoUpdate = false;
+				scene.add( meshpaseo );
+				// fin paseo
+
+				// inicio plaza
+				var plaza = new THREE.BoxBufferGeometry( 5.2, 0.2, 10 );
+				var materialplaza = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } );
+				materialplaza.map   = THREE.ImageUtils.loadTexture('./imagenes/piedra.jpg');
+				materialplaza.bumpMap   = THREE.ImageUtils.loadTexture('./imagenes/piedra.jpg');
+				materialplaza.bumpScale = 5;
+				var meshplaza = new THREE.Mesh( plaza, materialplaza );
+				meshplaza.position.x = 277.5;
+				meshplaza.position.y = 0;
+				meshplaza.position.z = 0;
+				meshplaza.scale.x = 20;
+				meshplaza.scale.y = Math.random() * 80 + 10;
+				meshplaza.scale.z = 20;
+				meshplaza.updateMatrix();
+				meshplaza.matrixAutoUpdate = false;
+				scene.add( meshplaza );
+
+				var plaza2 = new THREE.BoxBufferGeometry( 3, 0.2, 4 );
+				var materialplaza2 = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } );
+				materialplaza2.map   = THREE.ImageUtils.loadTexture('./imagenes/paseo.jpg');
+				materialplaza2.bumpMap   = THREE.ImageUtils.loadTexture('./imagenes/paseo.jpg');
+				materialplaza2.bumpScale = 5;
+				var meshplaza2 = new THREE.Mesh( plaza2, materialplaza2 );
+				meshplaza2.position.x = 277.5;
+				meshplaza2.position.y = 1;
+				meshplaza2.position.z = 0;
+				meshplaza2.scale.x = 20;
+				meshplaza2.scale.y = Math.random() * 80 + 10;
+				meshplaza2.scale.z = 20;
+				meshplaza2.updateMatrix();
+				meshplaza2.matrixAutoUpdate = false;
+				scene.add( meshplaza2 );
+				// fin plaza
+
+				//erick adicion de edificios uno por uno
+				var geometriaCubo0 = new THREE.BoxBufferGeometry( 2, 4, 2 );
+				//geometriaCubo0.translate( 0, 0.5, 0 );
+				var material0 = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } );
+				material0.map   = THREE.ImageUtils.loadTexture('./imagenes/edificio4.jpg');
+				material0.bumpMap   = THREE.ImageUtils.loadTexture('./imagenes/edificio4.jpg');
+				material0.bumpScale = 5;
+				var mesh0 = new THREE.Mesh( geometriaCubo0, material0 );
+				mesh0.position.x = 130;
+				mesh0.position.y = 40;
+				mesh0.position.z = 100;
+				mesh0.scale.x = 20;
+				mesh0.scale.y = 20;
+				mesh0.scale.z = 20;
+				mesh0.updateMatrix();
+				mesh0.matrixAutoUpdate = false;
+				scene.add( mesh0 );
+				var geometriaCubo1 = new THREE.BoxBufferGeometry( 1, 1, 2 );
+				geometriaCubo1.translate( 0, 0.5, 0 );
+				var material1 = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } );
+				material1.map   = THREE.ImageUtils.loadTexture('./imagenes/edificio.jpg');
+				material1.bumpMap   = THREE.ImageUtils.loadTexture('./imagenes/edificio.jpg');
+				material1.bumpScale = 5;
+				var mesh1 = new THREE.Mesh( geometriaCubo1, material1 );
+				mesh1.position.x = 100;
+				mesh1.position.y = 0;
+				mesh1.position.z = 100;
+				mesh1.scale.x = 20;
+				mesh1.scale.y = Math.random() * 80 + 10;
+				mesh1.scale.z = 20;
+				mesh1.updateMatrix();
+				mesh1.matrixAutoUpdate = false;
+				scene.add( mesh1 );
+				var geometriaCubo2 = new THREE.BoxBufferGeometry( 1, 1, 2 );
+				geometriaCubo2.translate( 0, 0.5, 0 );
+				var material2 = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } );
+				material2.map   = THREE.ImageUtils.loadTexture('./imagenes/edificio6.jpg');
+				material2.bumpMap   = THREE.ImageUtils.loadTexture('./imagenes/edificio6.jpg');
+				material2.bumpScale = 5;
+				var mesh2 = new THREE.Mesh( geometriaCubo2, material2 );
+				mesh2.position.x = 80;
+				mesh2.position.y = 0;
+				mesh2.position.z = 100;
+				mesh2.scale.x = 20;
+				mesh2.scale.y = Math.random() * 80 + 10;
+				mesh2.scale.z = 20;
+				mesh2.updateMatrix();
+				mesh2.matrixAutoUpdate = false;
+				scene.add( mesh2 );
+				var geometriaCubo3 = new THREE.BoxBufferGeometry( 2, 1, 2 );
+				geometriaCubo3.translate( 0, 0.5, 0 );
+				var material3 = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } );
+				material3.map   = THREE.ImageUtils.loadTexture('./imagenes/edificio3.png');
+				material3.bumpMap   = THREE.ImageUtils.loadTexture('./imagenes/edificio3.png');
+				material3.bumpScale = 5;
+				var mesh3 = new THREE.Mesh( geometriaCubo3, material3 );
+				mesh3.position.x = 50;
+				mesh3.position.y = 0;
+				mesh3.position.z = 100;
+				mesh3.scale.x = 20;
+				mesh3.scale.y = Math.random() * 80 + 10;
+				mesh3.scale.z = 20;
+				mesh3.updateMatrix();
+				mesh3.matrixAutoUpdate = false;
+				scene.add( mesh3 );
+				var geometriaCubo4 = new THREE.BoxBufferGeometry( 1, 1, 2 );
+				geometriaCubo4.translate( 0, 0.5, 0 );
+				var material4 = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } );
+				material4.map   = THREE.ImageUtils.loadTexture('./imagenes/edificio4.jpg');
+				material4.bumpMap   = THREE.ImageUtils.loadTexture('./imagenes/edificio4.jpg');
+				material4.bumpScale = 5;
+				var mesh4 = new THREE.Mesh( geometriaCubo4, material4 );
+				mesh4.position.x = 20;
+				mesh4.position.y = 0;
+				mesh4.position.z = 100;
+				mesh4.scale.x = 20;
+				mesh4.scale.y = Math.random() * 80 + 10;
+				mesh4.scale.z = 20;
+				mesh4.updateMatrix();
+				mesh4.matrixAutoUpdate = false;
+				scene.add( mesh4 );
+				var geometriaCubo5 = new THREE.BoxBufferGeometry( 1, 1, 2 );
+				geometriaCubo5.translate( 0, 0.5, 0 );
+				var material5 = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } );
+				material5.map   = THREE.ImageUtils.loadTexture('./imagenes/edificio5.jpg');
+				material5.bumpMap   = THREE.ImageUtils.loadTexture('./imagenes/edificio5.jpg');
+				material5.bumpScale = 5;
+				var mesh5 = new THREE.Mesh( geometriaCubo5, material5 );
+				mesh5.position.x = 0;
+				mesh5.position.y = 0;
+				mesh5.position.z = 100;
+				mesh5.scale.x = 20;
+				mesh5.scale.y = Math.random() * 80 + 10;
+				mesh5.scale.z = 20;
+				mesh5.updateMatrix();
+				mesh5.matrixAutoUpdate = false;
+				scene.add( mesh5 );
+				var geometriaCubo6 = new THREE.BoxBufferGeometry( 2, 1, 2 );
+				geometriaCubo6.translate( 0, 0.5, 0 );
+				var material6 = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } );
+				material6.map   = THREE.ImageUtils.loadTexture('./imagenes/edificio.jpg');
+				material6.bumpMap   = THREE.ImageUtils.loadTexture('./imagenes/edificio.jpg');
+				material6.bumpScale = 5;
+				var mesh6 = new THREE.Mesh( geometriaCubo6, material6 );
+				mesh6.position.x = -30;
+				mesh6.position.y = 0;
+				mesh6.position.z = 100;
+				mesh6.scale.x = 20;
+				mesh6.scale.y = Math.random() * 80 + 10;
+				mesh6.scale.z = 20;
+				mesh6.updateMatrix();
+				mesh6.matrixAutoUpdate = false;
+				scene.add( mesh6 );
+				//lado derecho de edificios
+				var geometriaCubo7 = new THREE.BoxBufferGeometry( 1, 1, 2 );
+				geometriaCubo7.translate( 0, 0.5, 0 );
+				var material7 = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } );
+				material7.map   = THREE.ImageUtils.loadTexture('./imagenes/edificio6.jpg');
+				material7.bumpMap   = THREE.ImageUtils.loadTexture('./imagenes/edificio6.jpg');
+				material7.bumpScale = 5;
+				var mesh7 = new THREE.Mesh( geometriaCubo7, material7 );
+				mesh7.position.x = 100;
+				mesh7.position.y = 0;
+				mesh7.position.z = -100;
+				mesh7.scale.x = 20;
+				mesh7.scale.y = Math.random() * 80 + 10;
+				mesh7.scale.z = 20;
+				mesh7.updateMatrix();
+				mesh7.matrixAutoUpdate = false;
+				scene.add( mesh7 );
+				var geometriaCubo8 = new THREE.BoxBufferGeometry( 1, 1, 2 );
+				geometriaCubo8.translate( 0, 0.5, 0 );
+				var material8 = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } );
+				material8.map   = THREE.ImageUtils.loadTexture('./imagenes/edificio5.jpg');
+				material8.bumpMap   = THREE.ImageUtils.loadTexture('./imagenes/edificio5.jpg');
+				material8.bumpScale = 5;
+				var mesh8 = new THREE.Mesh( geometriaCubo8, material8 );
+				mesh8.position.x = 80;
+				mesh8.position.y = 0;
+				mesh8.position.z = -100;
+				mesh8.scale.x = 20;
+				mesh8.scale.y = Math.random() * 80 + 10;
+				mesh8.scale.z = 20;
+				mesh8.updateMatrix();
+				mesh8.matrixAutoUpdate = false;
+				scene.add( mesh8 );
+				var geometriaCubo9 = new THREE.BoxBufferGeometry( 2, 1, 2 );
+				geometriaCubo9.translate( 0, 0.5, 0 );
+				var material9 = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } );
+				material9.map   = THREE.ImageUtils.loadTexture('./imagenes/edificio4.jpg');
+				material9.bumpMap   = THREE.ImageUtils.loadTexture('./imagenes/edificio4.jpg');
+				material9.bumpScale = 5;
+				var mesh9 = new THREE.Mesh( geometriaCubo9, material9 );
+				mesh9.position.x = 50;
+				mesh9.position.y = 0;
+				mesh9.position.z = -100;
+				mesh9.scale.x = 20;
+				mesh9.scale.y = Math.random() * 80 + 10;
+				mesh9.scale.z = 20;
+				mesh9.updateMatrix();
+				mesh9.matrixAutoUpdate = false;
+				scene.add( mesh9 );
+				var geometriaCubo10 = new THREE.BoxBufferGeometry( 1, 1, 2 );
+				geometriaCubo10.translate( 0, 0.5, 0 );
+				var material10 = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } );
+				material10.map   = THREE.ImageUtils.loadTexture('./imagenes/edificio3.png');
+				material10.bumpMap   = THREE.ImageUtils.loadTexture('./imagenes/edificio3.png');
+				material10.bumpScale = 5;
+				var mesh10 = new THREE.Mesh( geometriaCubo10, material10 );
+				mesh10.position.x = 20;
+				mesh10.position.y = 0;
+				mesh10.position.z = -100;
+				mesh10.scale.x = 20;
+				mesh10.scale.y = Math.random() * 80 + 10;
+				mesh10.scale.z = 20;
+				mesh10.updateMatrix();
+				mesh10.matrixAutoUpdate = false;
+				scene.add( mesh10 );
+				var geometriaCubo11 = new THREE.BoxBufferGeometry( 1, 1, 2 );
+				geometriaCubo11.translate( 0, 0.5, 0 );
+				var material11 = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } );
+				material11.map   = THREE.ImageUtils.loadTexture('./imagenes/edificio.jpg');
+				material11.bumpMap   = THREE.ImageUtils.loadTexture('./imagenes/edificio.jpg');
+				material11.bumpScale = 5;
+				var mesh11 = new THREE.Mesh( geometriaCubo11, material11 );
+				mesh11.position.x = 0;
+				mesh11.position.y = 0;
+				mesh11.position.z = -100;
+				mesh11.scale.x = 20;
+				mesh11.scale.y = Math.random() * 80 + 10;
+				mesh11.scale.z = 20;
+				mesh11.updateMatrix();
+				mesh11.matrixAutoUpdate = false;
+				scene.add( mesh11 );
+				var geometriaCubo12 = new THREE.BoxBufferGeometry( 2, 1, 2 );
+				geometriaCubo12.translate( 0, 0.5, 0 );
+				var material12 = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } );
+				material12.map   = THREE.ImageUtils.loadTexture('./imagenes/edificio4.jpg');
+				material12.bumpMap   = THREE.ImageUtils.loadTexture('./imagenes/edificio4.jpg');
+				material12.bumpScale = 5;
+				var mesh12 = new THREE.Mesh( geometriaCubo12, material12 );
+				mesh12.position.x = -30;
+				mesh12.position.y = 0;
+				mesh12.position.z = -100;
+				mesh12.scale.x = 20;
+				mesh12.scale.y = Math.random() * 80 + 10;
+				mesh12.scale.z = 20;
+				mesh12.updateMatrix();
+				mesh12.matrixAutoUpdate = false;
+				scene.add( mesh12 );
+				var geometriaCuboF = new THREE.BoxBufferGeometry( 2, 3, 2 );
+				//geometriaCuboF.translate( 0, 0.5, 0 );
+				var materialF = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } );
+				materialF.map   = THREE.ImageUtils.loadTexture('./imagenes/edificio5.jpg');
+				materialF.bumpMap   = THREE.ImageUtils.loadTexture('./imagenes/edificio5.jpg');
+				materialF.bumpScale = 5;
+				var meshF = new THREE.Mesh( geometriaCuboF, materialF );
+				meshF.position.x = 130;
+				meshF.position.y = 30;
+				meshF.position.z = -100;
+				meshF.scale.x = 20;
+				meshF.scale.y = 20;
+				meshF.scale.z = 20;
+				meshF.updateMatrix();
+				meshF.matrixAutoUpdate = false;
+				scene.add( meshF );
+				var geometriaCuboA1 = new THREE.BoxBufferGeometry( 2, 2.5, 2 );
+				var materialA1 = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } );
+				materialA1.map   = THREE.ImageUtils.loadTexture('./imagenes/edificio5.jpg');
+				materialA1.bumpMap   = THREE.ImageUtils.loadTexture('./imagenes/edificio5.jpg');
+				materialA1.bumpScale = 5;
+				var meshA1 = new THREE.Mesh( geometriaCuboA1, materialA1 );
+				meshA1.position.x = -110;
+				meshA1.position.y = 25;
+				meshA1.position.z = -100;
+				meshA1.scale.x = 20;
+				meshA1.scale.y = 20;
+				meshA1.scale.z = 20;
+				meshA1.updateMatrix();
+				meshA1.matrixAutoUpdate = false;
+				scene.add( meshA1 );
+				var geometriaCuboA2 = new THREE.BoxBufferGeometry( 2, 3, 2 );
+				var materialA2 = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } );
+				materialA2.map   = THREE.ImageUtils.loadTexture('./imagenes/edificio2.jpg');
+				materialA2.bumpMap   = THREE.ImageUtils.loadTexture('./imagenes/edificio2.jpg');
+				materialA2.bumpScale = 5;
+				var meshA2 = new THREE.Mesh( geometriaCuboA2, materialA2 );
+				meshA2.position.x = -110;
+				meshA2.position.y = 30;
+				meshA2.position.z = 100;
+				meshA2.scale.x = 20;
+				meshA2.scale.y = 20;
+				meshA2.scale.z = 20;
+				meshA2.updateMatrix();
+				meshA2.matrixAutoUpdate = false;
+				scene.add( meshA2 );
+
+				var geometriaCuboL1 = new THREE.BoxBufferGeometry( 2, 4, 2 );
+				var materialL1 = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } );
+				materialL1.map   = THREE.ImageUtils.loadTexture('./imagenes/edificio.jpg');
+				materialL1.bumpMap   = THREE.ImageUtils.loadTexture('./imagenes/edificio.jpg');
+				materialL1.bumpScale = 5;
+				var meshL1 = new THREE.Mesh( geometriaCuboL1, materialL1 );
+				meshL1.position.x = 310;
+				meshL1.position.y = 40;
+				meshL1.position.z = 159;
+				meshL1.scale.x = 20;
+				meshL1.scale.y = 20;
+				meshL1.scale.z = 20;
+				meshL1.updateMatrix();
+				meshL1.matrixAutoUpdate = false;
+				scene.add( meshL1 );
+				var geometriaCuboL2 = new THREE.BoxBufferGeometry( 2.5, 3, 2 );
+				var materialL2 = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } );
+				materialL2.map   = THREE.ImageUtils.loadTexture('./imagenes/edificio6.jpg');
+				materialL2.bumpMap   = THREE.ImageUtils.loadTexture('./imagenes/edificio6.jpg');
+				materialL2.bumpScale = 5;
+				var meshL2 = new THREE.Mesh( geometriaCuboL2, materialL2 );
+				meshL2.position.x = 250;
+				meshL2.position.y = 30;
+				meshL2.position.z = 159;
+				meshL2.scale.x = 20;
+				meshL2.scale.y = 20;
+				meshL2.scale.z = 20;
+				meshL2.updateMatrix();
+				meshL2.matrixAutoUpdate = false;
+				scene.add( meshL2 );
+				var geometriaCuboL3 = new THREE.BoxBufferGeometry( 2, 4, 2 );
+				var materialL3 = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } );
+				materialL3.map   = THREE.ImageUtils.loadTexture('./imagenes/edificio4.jpg');
+				materialL3.bumpMap   = THREE.ImageUtils.loadTexture('./imagenes/edificio4.jpg');
+				materialL3.bumpScale = 5;
+				var meshL3 = new THREE.Mesh( geometriaCuboL3, materialL3 );
+				meshL3.position.x = 310;
+				meshL3.position.y = 40;
+				meshL3.position.z = -159;
+				meshL3.scale.x = 20;
+				meshL3.scale.y = 20;
+				meshL3.scale.z = 20;
+				meshL3.updateMatrix();
+				meshL3.matrixAutoUpdate = false;
+				scene.add( meshL3 );
+				var geometriaCuboL4 = new THREE.BoxBufferGeometry( 2.5, 3, 2 );
+				var materialL4 = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } );
+				materialL4.map   = THREE.ImageUtils.loadTexture('./imagenes/edificio3.png');
+				materialL4.bumpMap   = THREE.ImageUtils.loadTexture('./imagenes/edificio3.png');
+				materialL4.bumpScale = 5;
+				var meshL4 = new THREE.Mesh( geometriaCuboL4, materialL4 );
+				meshL4.position.x = 250;
+				meshL4.position.y = 30;
+				meshL4.position.z = -159;
+				meshL4.scale.x = 20;
+				meshL4.scale.y = 20;
+				meshL4.scale.z = 20;
+				meshL4.updateMatrix();
+				meshL4.matrixAutoUpdate = false;
+				scene.add( meshL4 );
+				//erick fin adicion de edificios
+
+
+							//var geometry = new THREE.CylinderBufferGeometry( 0, 10, 30, 4, 1 );
+							//var geometriaCubo = new THREE.CubeGeometry(10,14,10);
+				//var geometriaCubo = new THREE.BoxBufferGeometry( 1, 1, 1 );
+				//geometriaCubo.translate( 0, 0.5, 0 );
+				//var material = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } );
+				//material.map   = THREE.ImageUtils.loadTexture('edificio.jpg');
+				//material.bumpMap   = THREE.ImageUtils.loadTexture('edificio.jpg');
+				//material.bumpScale = 5;
+				//for ( var i = 0; i < 30; i ++ ) {
+
+							//var mesh = new THREE.Mesh( geometry, material );
+					//var mesh = new THREE.Mesh( geometriaCubo, material );
+							//mesh.position.x = Math.random() * 1600 - 800;
+					//mesh.position.x = Math.random() * 290 - 120;
+					//mesh.position.y = 0;
+							//mesh.position.z = Math.random() * 1600 - 800;
+					//mesh.position.z = Math.random() * 290 - 120;
+					//mesh.scale.x = 20;
+					//mesh.scale.y = Math.random() * 80 + 10;
+					//mesh.scale.z = 20;
+					//mesh.updateMatrix();
+					//mesh.matrixAutoUpdate = false;
+					//scene.add( mesh );
+
+				//}
+
+				// lights
+
+				var light = new THREE.DirectionalLight( 0xffffff );
+				light.position.set( 1, 1, 1 );
+				scene.add( light );
+
+				var light = new THREE.DirectionalLight( 0x002288 );
+				light.position.set( - 1, - 1, - 1 );
+				scene.add( light );
+
+				var light = new THREE.AmbientLight( 0x222222 );
+				scene.add( light );
+
+				//
+
+				window.addEventListener( 'resize', onWindowResize, false );
+				//erick auto se llama a manager 2
+				manager.onLoad = function () {
+
+					render();
+
+				};
+				manager2.onLoad = function () { render(); };
+				manager3.onLoad = function () { render(); };
+				manager4.onLoad = function () { render(); };
+				manager5.onLoad = function () { render(); };
+				manager6.onLoad = function () { render(); };
+
+				//erick auto se llama a manager 2
+			}
+
+			function onWindowResize() {
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+			}
+
+			function animate() {
+
+				requestAnimationFrame( animate );
+
+				controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
+
+				render();
+
+			}
+
+			function render() {
+
+				renderer.render( scene, camera );
+
+			}
+
+		</script>
+
+	</body>
+</html>
